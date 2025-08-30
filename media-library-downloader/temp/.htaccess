@@ -1,0 +1,49 @@
+# Protect temp directory from direct access
+# Allow only specific file types for download
+<Files "*.zip">
+    # Allow ZIP files to be downloaded
+    Allow from all
+</Files>
+
+# Deny access to all other files
+<FilesMatch "^(?!.*\.zip$).*">
+    Deny from all
+</FilesMatch>
+
+# Prevent directory browsing
+Options -Indexes
+
+# Disable script execution
+<Files "*.php">
+    Deny from all
+</Files>
+<Files "*.php3">
+    Deny from all
+</Files>
+<Files "*.php4">
+    Deny from all
+</Files>
+<Files "*.php5">
+    Deny from all
+</Files>
+<Files "*.phtml">
+    Deny from all
+</Files>
+<Files "*.pl">
+    Deny from all
+</Files>
+<Files "*.py">
+    Deny from all
+</Files>
+<Files "*.jsp">
+    Deny from all
+</Files>
+<Files "*.asp">
+    Deny from all
+</Files>
+<Files "*.sh">
+    Deny from all
+</Files>
+<Files "*.cgi">
+    Deny from all
+</Files>
