@@ -1,0 +1,373 @@
+.locahl-promo-banner.notice {
+    border: none;
+    border-left: none;
+    padding: 0;
+    margin: 12px 0 18px;
+    overflow: visible;
+    background: transparent;
+    box-shadow: none;
+    color: #e2e8f0;
+}
+
+/* Reset WordPress admin notice typography inside the banner. */
+.locahl-promo-banner.notice p,
+.locahl-promo-banner.notice h2,
+.locahl-promo-banner.notice a,
+.locahl-promo-banner.notice span,
+.locahl-promo-banner.notice div,
+.locahl-promo-banner.notice code {
+    text-decoration: none !important;
+    box-shadow: none !important;
+    background-image: none !important;
+    border-bottom: none !important;
+}
+
+.locahl-promo-banner.notice p.locahl-bento-banner__body {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif !important;
+    font-size: 18px !important;
+    line-height: 1.65 !important;
+    color: #cbd5e1 !important;
+}
+
+.locahl-promo-banner.notice a:focus {
+    box-shadow: none;
+    outline: 2px solid rgba(110, 231, 183, 0.45);
+    outline-offset: 2px;
+}
+
+.locahl-bento-banner {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    background: #1e293b;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+    font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.locahl-bento-banner__glow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    pointer-events: none;
+    background: radial-gradient(circle at 0% 10%, rgba(110, 231, 183, 0.1) 0%, transparent 70%);
+}
+
+.locahl-bento-banner__orb {
+    position: absolute;
+    bottom: -96px;
+    left: -96px;
+    width: 256px;
+    height: 256px;
+    border-radius: 50%;
+    background: rgba(110, 231, 183, 0.05);
+    filter: blur(48px);
+    pointer-events: none;
+}
+
+.locahl-bento-banner__grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    align-items: center;
+    padding: 24px;
+}
+
+.locahl-bento-banner__close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 5;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.85);
+    color: #94a3b8;
+    cursor: pointer;
+}
+
+.locahl-bento-banner__close:focus {
+    outline: 2px solid rgba(110, 231, 183, 0.45);
+    outline-offset: 2px;
+}
+
+.locahl-bento-banner__content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-inline-end: 44px;
+}
+
+.locahl-bento-banner[dir="rtl"] .locahl-bento-banner__close {
+    right: auto;
+    left: 16px;
+}
+
+.locahl-bento-banner__title {
+    margin: 0;
+    font-family: 'Lexend', ui-sans-serif, system-ui, sans-serif;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #fff !important;
+}
+
+.locahl-bento-banner__title span {
+    color: #6ee7b7 !important;
+}
+
+.locahl-bento-banner__body {
+    max-width: 36rem;
+}
+
+.locahl-bento-banner__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 24px;
+    padding-top: 8px;
+}
+
+.locahl-bento-banner__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 32px;
+    border-radius: 8px;
+    border: none;
+    background: #6ee7b7;
+    color: #003827 !important;
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 10px 25px -8px rgba(110, 231, 183, 0.35);
+}
+
+.locahl-bento-banner__demo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #bccac1 !important;
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.locahl-bento-banner__demo svg {
+    flex-shrink: 0;
+}
+
+.locahl-bento-banner__stats {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.locahl-bento-banner__stat-value {
+    font-family: 'Lexend', ui-sans-serif, system-ui, sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: #fff !important;
+}
+
+.locahl-bento-banner__stat-label {
+    font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #94a3b8 !important;
+}
+
+.locahl-bento-banner__stat-divider {
+    width: 1px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.locahl-bento-banner__visual {
+    position: relative;
+    margin-top: 8px;
+}
+
+.locahl-bento-banner__glass {
+    padding: 16px;
+    border-radius: 12px;
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+    transform: rotate(2deg);
+}
+
+.locahl-bento-banner__mock-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding: 0 8px;
+}
+
+.locahl-bento-banner__dots {
+    display: flex;
+    gap: 6px;
+}
+
+.locahl-bento-banner__dots span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.locahl-bento-banner__dots span:nth-child(1) { background: rgba(239, 68, 68, 0.5); }
+.locahl-bento-banner__dots span:nth-child(2) { background: rgba(234, 179, 8, 0.5); }
+.locahl-bento-banner__dots span:nth-child(3) { background: rgba(34, 197, 94, 0.5); }
+
+.locahl-bento-banner__env {
+    padding: 4px 12px;
+    border-radius: 4px;
+    background: rgba(7, 13, 31, 0.5);
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 10px;
+    color: #94a3b8;
+    letter-spacing: 0.02em;
+}
+
+.locahl-bento-banner__mock-body {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    border-radius: 8px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #070d1f 0%, #0c1324 100%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.locahl-bento-banner__mock-rows {
+    padding: 20px 16px;
+    display: grid;
+    gap: 10px;
+}
+
+.locahl-bento-banner__mock-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: rgba(51, 57, 76, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 11px;
+    color: #dce1fb;
+}
+
+.locahl-bento-banner__mock-row code {
+    color: #6ee7b7;
+    font-family: inherit;
+}
+
+.locahl-bento-banner__mock-toggle {
+    width: 28px;
+    height: 14px;
+    border-radius: 999px;
+    background: #6ee7b7;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.locahl-bento-banner__mock-toggle::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #003827;
+}
+
+.locahl-bento-banner__toast {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 48px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    background: rgba(51, 57, 76, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(110, 231, 183, 0.2);
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 12px;
+    color: #dce1fb;
+}
+
+.locahl-bento-banner__toast-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.locahl-bento-banner__toast-left svg {
+    color: #6ee7b7;
+    flex-shrink: 0;
+}
+
+.locahl-bento-banner__toast-time {
+    font-size: 10px;
+    color: #94a3b8;
+    white-space: nowrap;
+}
+
+@media (min-width: 960px) {
+    .locahl-bento-banner__grid {
+        grid-template-columns: 7fr 5fr;
+        padding: 48px;
+        gap: 24px;
+    }
+
+    .locahl-bento-banner__visual {
+        margin-top: 0;
+    }
+}
+
+@media (max-width: 782px) {
+    .locahl-bento-banner__grid {
+        padding: 18px;
+    }
+
+    .locahl-bento-banner__title {
+        font-size: 28px;
+    }
+
+    .locahl-promo-banner.notice p.locahl-bento-banner__body {
+        font-size: 16px !important;
+    }
+
+    .locahl-bento-banner__cta {
+        width: 100%;
+    }
+}

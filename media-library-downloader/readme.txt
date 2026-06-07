@@ -3,9 +3,9 @@ Contributors: devloper00
 Donate link: https://ko-fi.com/devloper
 Tags: library, media, files, download, downloader
 Requires at least: 5.0 or higher
-Tested up to: 6.8.2
-Requires PHP: 5.6
-Stable tag: 1.4.0
+Tested up to: 7.0
+Requires PHP: 7.4
+Stable tag: 1.4.1
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -65,10 +65,10 @@ Once the plugin is installed and activated, you can start downloading files from
 = Downloading Multiple Files =
 
 1. Go to **Media > Library**
-2. Switch to List view for easier bulk selection
+2. Switch to **List view** using the icons above the media table (list icon on the left)
 3. Use the checkboxes to select multiple files you want to download
-4. Click the **Bulk Download** button
-5. All selected files will be packaged and downloaded as a ZIP file
+4. Open the **Bulk actions** dropdown and choose **Download selected files**
+5. Click **Apply** — selected files will be packaged and downloaded as a ZIP file
 
 = View Options =
 
@@ -96,6 +96,14 @@ The plugin works seamlessly with both WordPress media library view options:
 * Download activity can be logged and viewed in the admin dashboard
 
 == Changelog ==
+
+= 1.4.1 =
+* Fixed list view detection so bulk download and row actions work in Media Library list mode
+* Added PHP bulk action registration for list view compatibility
+* Secured ZIP downloads through authenticated AJAX instead of public temp URLs
+* Fixed temp folder cleanup to only remove expired files
+* Added list view usage hint for bulk downloads
+* Tested up to WordPress 7.0
 
 = 1.4.0 =
 * **MAJOR UPDATE**: Complete security and feature overhaul

@@ -312,6 +312,8 @@ if ( ! class_exists( 'MLD_Admin' ) ) {
                 wp_die( __( 'Unauthorized', 'media-library-downloader' ) );
             }
 
+            check_ajax_referer( 'mld_cleanup_nonce', 'nonce' );
+
             $this->perform_cleanup();
             wp_send_json_success( __( 'Cleanup completed', 'media-library-downloader' ) );
         }

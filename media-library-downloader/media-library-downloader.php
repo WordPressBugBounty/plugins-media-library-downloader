@@ -3,12 +3,10 @@
  * Plugin Name:       Media Library Downloader
  * Plugin URI:        https://wordpress.org/plugins/media-library-downloader/
  * Description:       Download multiple media library files in one click !
- * Version:           1.4.0
- * Tags:              library, media, files, download, downloader, WordPress
+ * Version:           1.4.1
  * Requires at least: 5.0 or higher
- * Requires PHP:      5.6
- * Tested up to:      6.8.2
- * Stable tag:        1.4.0
+ * Requires PHP:      7.4
+ * Tested up to:      7.0
  * Author:            Michael Revellin-Clerc
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -42,7 +40,7 @@ if ( !class_exists( 'MediaLibraryDownloader' ) ) {
          * Define plugin constants
          */
         private function define_constants() {
-            define( 'MLD_VERSION', '1.4.0' );
+            define( 'MLD_VERSION', '1.4.1' );
             define( 'MLD_PATH', plugin_dir_path( __FILE__ ) );
             define( 'MLD_URL', plugin_dir_url( __FILE__ ) );
             define( 'MLD_BASENAME', plugin_basename( __FILE__ ) );
@@ -153,6 +151,7 @@ if ( !class_exists( 'MediaLibraryDownloader' ) ) {
             // Include admin class only in admin area
             if ( is_admin() ) {
                 require MLD_INCLUDES . 'class-admin.php';
+                require MLD_INCLUDES . 'class-locahl-banner.php';
             }
         }
     }
