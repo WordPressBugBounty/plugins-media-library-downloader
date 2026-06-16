@@ -12,6 +12,7 @@ if ( ! class_exists( 'MLD_Class' ) ) {
             add_action( 'wp_ajax_mld_serve_zip', array( $this, 'mld_serve_zip' ) );
             add_action( 'init', array( $this, 'schedule_cleanup' ) );
             add_filter( 'bulk_actions-upload', array( $this, 'mld_register_bulk_action' ) );
+            add_filter( 'handle_bulk_actions-upload', array( $this, 'mld_handle_bulk_action' ), 10, 3 );
         }
 
         /**
@@ -23,6 +24,40 @@ if ( ! class_exists( 'MLD_Class' ) ) {
         public function mld_register_bulk_action( $actions ) {
             $actions['mld-download-files'] = __( 'Download selected files', 'media-library-downloader' );
             return $actions;
+        }
+
+        /**
+         * Fallback when bulk action form is submitted without JavaScript.
+         *
+         * @param string $redirect_to Redirect URL.
+         * @param string $doaction    Bulk action slug.
+         * @param array  $post_ids    Selected attachment IDs.
+         * @return string
+         */
+        public function mld_handle_bulk_action( $redirect_to, $doaction, $post_ids ) {
+            if ( 'mld-download-files' !== $doaction ) {
+                return $redirect_to;
+            }
+
+            if ( ! current_user_can( 'upload_files' ) ) {
+                return add_query_arg( 'mld_download_error', 'unauthorized', $redirect_to );
+            }
+
+            $valid_ids = $this->mld_filter_accessible_attachments( array_map( 'absint', (array) $post_ids ) );
+            if ( empty( $valid_ids ) ) {
+                return add_query_arg( 'mld_download_error', 'no_files', $redirect_to );
+            }
+
+            $token = wp_generate_password( 32, false, false );
+            set_transient( 'mld_pending_download_' . $token, $valid_ids, 5 * MINUTE_IN_SECONDS );
+
+            return add_query_arg(
+                array(
+                    'mld_pending_download' => $token,
+                    'mode'                 => 'list',
+                ),
+                $redirect_to
+            );
         }
 
         /**
@@ -98,12 +133,30 @@ if ( ! class_exists( 'MLD_Class' ) ) {
             }
 
             wp_enqueue_script( 'mld-admin-script', MLD_ASSETS_JS . 'admin.js', array( 'jquery' ), MLD_VERSION, true );
+
+            $pending_ids = array();
+            if ( isset( $_GET['mld_pending_download'] ) ) {
+                $token = sanitize_text_field( wp_unslash( $_GET['mld_pending_download'] ) );
+                $ids   = get_transient( 'mld_pending_download_' . $token );
+                if ( is_array( $ids ) ) {
+                    $pending_ids = array_values( array_map( 'absint', $ids ) );
+                    delete_transient( 'mld_pending_download_' . $token );
+                }
+            }
+
             wp_localize_script(
                 'mld-admin-script',
                 'admin',
                 array(
                     'ajax_url' => admin_url( 'admin-ajax.php' ),
                     'nonce'    => wp_create_nonce( 'mld_download_nonce' ),
+                )
+            );
+            wp_localize_script(
+                'mld-admin-script',
+                'mld_pending',
+                array(
+                    'ids' => $pending_ids,
                 )
             );
             wp_localize_script(
@@ -117,7 +170,7 @@ if ( ! class_exists( 'MLD_Class' ) ) {
                     'preparing_download'=> __( 'Preparing download...', 'media-library-downloader' ),
                     'invalid_file'     => __( 'Invalid file selected', 'media-library-downloader' ),
                     'unauthorized'     => __( 'Unauthorized access', 'media-library-downloader' ),
-                    'list_view_hint'   => __( 'Tip: Select files using the checkboxes, then choose "Download selected files" from the Bulk actions dropdown and click Apply.', 'media-library-downloader' ),
+                    'list_view_hint'   => __( 'Tip: Select files with the checkboxes, then click the blue "Download selected files" button or use Bulk actions > Download selected files > Apply.', 'media-library-downloader' ),
                     'dismiss_hint'     => __( 'Dismiss', 'media-library-downloader' ),
                 )
             );

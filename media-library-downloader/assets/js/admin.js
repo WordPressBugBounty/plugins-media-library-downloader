@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         isListView() {
+            if (body.classList.contains('mode-list')) {
+                return true;
+            }
+
             if (document.querySelector('form#posts-filter .wp-list-table')) {
                 return true;
             }
@@ -21,7 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 return true;
             }
 
-            return document.querySelector('.table-view-list') !== null;
+            return document.querySelector('.wp-list-table.upload') !== null
+                || document.querySelector('.table-view-list') !== null;
         }
 
         isGridView() {
@@ -34,22 +39,68 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         init() {
+            this.bindViewSwitchers();
+
             if (this.isListView()) {
                 this.initListView();
+            } else if (this.isGridView()) {
+                this.initGridView();
+            }
+
+            this.runPendingDownload();
+        }
+
+        bindViewSwitchers() {
+            document.querySelectorAll('#view-switch-list a, #view-switch-grid a').forEach((link) => {
+                link.addEventListener('click', () => {
+                    window.setTimeout(() => {
+                        if (this.listObserver) {
+                            this.listObserver.disconnect();
+                            this.listObserver = null;
+                        }
+
+                        if (this.isListView()) {
+                            this.initListView();
+                        } else if (this.isGridView()) {
+                            this.initGridView();
+                        }
+                    }, 300);
+                });
+            });
+        }
+
+        runPendingDownload() {
+            if (typeof mld_pending === 'undefined' || !Array.isArray(mld_pending.ids) || !mld_pending.ids.length) {
                 return;
             }
 
-            if (this.isGridView()) {
-                this.initGridView();
-            }
+            this.downloadFiles(mld_pending.ids);
         }
 
         initListView() {
             this.addBulkActions();
+            this.addListViewToolbarButton();
             this.handleBulkDownload();
             this.addIndividualDownloadButtons();
             this.watchListChanges();
             this.showListViewHint();
+        }
+
+        getSelectedListIds() {
+            const checkedFiles = document.querySelectorAll('#the-list input[type="checkbox"][name="media[]"]:checked');
+
+            if (!checkedFiles.length) {
+                return [];
+            }
+
+            const selection = [];
+            checkedFiles.forEach((element) => {
+                if (element && element.value) {
+                    selection.push(element.value);
+                }
+            });
+
+            return selection;
         }
 
         addBulkActions() {
@@ -72,14 +123,48 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
+        addListViewToolbarButton() {
+            if (document.getElementById('mld-list-download-btn')) {
+                return;
+            }
+
+            const bulkActions = document.querySelector('.tablenav.top .bulkactions');
+            if (!bulkActions) {
+                return;
+            }
+
+            const downloadButton = document.createElement('button');
+            downloadButton.id = 'mld-list-download-btn';
+            downloadButton.type = 'button';
+            downloadButton.className = 'button button-primary';
+            downloadButton.style.marginLeft = '8px';
+            downloadButton.textContent = mld_i18n.download_files;
+            downloadButton.setAttribute('aria-label', mld_i18n.download_files);
+
+            downloadButton.addEventListener('click', () => {
+                const selection = this.getSelectedListIds();
+                if (!selection.length) {
+                    this.showMessage(mld_i18n.no_files_selected, 'error');
+                    return;
+                }
+
+                this.downloadFiles(selection);
+            });
+
+            bulkActions.insertAdjacentElement('afterend', downloadButton);
+        }
+
         handleBulkDownload() {
             const doAction = document.querySelector('#doaction');
             const doAction2 = document.querySelector('#doaction2');
 
-            if (doAction) {
+            if (doAction && !doAction.dataset.mldBound) {
+                doAction.dataset.mldBound = '1';
                 doAction.addEventListener('click', (e) => this.processBulkAction(e, 'top'));
             }
-            if (doAction2) {
+
+            if (doAction2 && !doAction2.dataset.mldBound) {
+                doAction2.dataset.mldBound = '1';
                 doAction2.addEventListener('click', (e) => this.processBulkAction(e, 'bottom'));
             }
         }
@@ -95,20 +180,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             e.preventDefault();
 
-            const checkedFiles = document.querySelectorAll('#the-list input[type="checkbox"]:checked');
-            if (!checkedFiles || checkedFiles.length === 0) {
-                this.showMessage(mld_i18n.no_files_selected, 'error');
-                return;
-            }
-
-            const selection = [];
-            checkedFiles.forEach((element) => {
-                if (element && element.value) {
-                    selection.push(element.value);
-                }
-            });
-
-            if (selection.length === 0) {
+            const selection = this.getSelectedListIds();
+            if (!selection.length) {
                 this.showMessage(mld_i18n.no_files_selected, 'error');
                 return;
             }
@@ -126,30 +199,40 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 row.classList.add('mld-processed');
 
-                const titleCell = row.querySelector('.title, .column-title, .media-icon');
-                if (!titleCell) {
-                    return;
-                }
-
                 const attachmentId = this.getAttachmentId(row);
                 if (!attachmentId) {
                     return;
                 }
 
-                const rowActions = row.querySelector('.row-actions');
-                if (!rowActions || rowActions.querySelector('.mld-download')) {
+                let rowActions = row.querySelector('.row-actions');
+                if (!rowActions) {
+                    const titleColumn = row.querySelector('.column-title, .title');
+                    if (!titleColumn) {
+                        return;
+                    }
+
+                    rowActions = document.createElement('div');
+                    rowActions.className = 'row-actions';
+                    titleColumn.appendChild(rowActions);
+                }
+
+                if (rowActions.querySelector('.mld-download')) {
                     return;
                 }
 
                 const downloadAction = document.createElement('span');
                 downloadAction.className = 'mld-download';
-                downloadAction.innerHTML = ' | <a href="#" class="mld-single-download" data-attachment-id="' + attachmentId + '">' + mld_i18n.download_single + '</a>';
+                downloadAction.innerHTML = '<a href="#" class="mld-single-download" data-attachment-id="' + attachmentId + '">' + mld_i18n.download_single + '</a>';
 
                 const downloadLink = downloadAction.querySelector('.mld-single-download');
                 downloadLink.addEventListener('click', (e) => {
                     e.preventDefault();
                     this.downloadFiles([attachmentId]);
                 });
+
+                if (rowActions.children.length) {
+                    downloadAction.insertAdjacentHTML('afterbegin', ' | ');
+                }
 
                 rowActions.appendChild(downloadAction);
             });
@@ -167,6 +250,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             this.listObserver = new MutationObserver(() => {
                 this.addBulkActions();
+                this.addListViewToolbarButton();
+                this.handleBulkDownload();
                 this.addIndividualDownloadButtons();
             });
 
@@ -200,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         getAttachmentId(row) {
-            const checkbox = row.querySelector('input[type="checkbox"]');
+            const checkbox = row.querySelector('input[type="checkbox"][name="media[]"]');
             return checkbox ? checkbox.value : null;
         }
 
@@ -224,7 +309,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             setTimeout(() => {
                 const bulkSelect = document.querySelector('.media-toolbar .select-mode-toggle-button');
-                if (bulkSelect) {
+                if (bulkSelect && !bulkSelect.dataset.mldBound) {
+                    bulkSelect.dataset.mldBound = '1';
                     bulkSelect.addEventListener('click', () => {
                         setTimeout(() => this.addBulkDownloadButton(), 100);
                     });

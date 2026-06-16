@@ -3,7 +3,7 @@
  * Plugin Name:       Media Library Downloader
  * Plugin URI:        https://wordpress.org/plugins/media-library-downloader/
  * Description:       Download multiple media library files in one click !
- * Version:           1.4.1
+ * Version:           1.4.2
  * Requires at least: 5.0 or higher
  * Requires PHP:      7.4
  * Tested up to:      7.0
@@ -40,7 +40,7 @@ if ( !class_exists( 'MediaLibraryDownloader' ) ) {
          * Define plugin constants
          */
         private function define_constants() {
-            define( 'MLD_VERSION', '1.4.1' );
+            define( 'MLD_VERSION', '1.4.2' );
             define( 'MLD_PATH', plugin_dir_path( __FILE__ ) );
             define( 'MLD_URL', plugin_dir_url( __FILE__ ) );
             define( 'MLD_BASENAME', plugin_basename( __FILE__ ) );

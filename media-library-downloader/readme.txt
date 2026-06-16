@@ -5,7 +5,7 @@ Tags: library, media, files, download, downloader
 Requires at least: 5.0 or higher
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,9 +66,10 @@ Once the plugin is installed and activated, you can start downloading files from
 
 1. Go to **Media > Library**
 2. Switch to **List view** using the icons above the media table (list icon on the left)
-3. Use the checkboxes to select multiple files you want to download
-4. Open the **Bulk actions** dropdown and choose **Download selected files**
-5. Click **Apply** — selected files will be packaged and downloaded as a ZIP file
+3. Select the files you want using the checkboxes in the first column
+4. Click the blue **Download selected files** button next to Bulk actions, or choose **Bulk actions > Download selected files** and click **Apply**
+5. For a single file, hover a row title and click **Download** in the row actions
+6. Selected files will be packaged and downloaded as a ZIP file
 
 = View Options =
 
@@ -96,6 +97,12 @@ The plugin works seamlessly with both WordPress media library view options:
 * Download activity can be logged and viewed in the admin dashboard
 
 == Changelog ==
+
+= 1.4.2 =
+* Added a visible **Download selected files** button in Media Library list view
+* Improved list view detection and row action injection across WordPress versions
+* Added server-side fallback when bulk actions are submitted without JavaScript
+* Tested up to WordPress 7.0
 
 = 1.4.1 =
 * Fixed list view detection so bulk download and row actions work in Media Library list mode
